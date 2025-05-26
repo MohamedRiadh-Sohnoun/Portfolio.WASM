@@ -25,7 +25,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish Blazor WASM
-      run: dotnet publish Portfolio.WASM/Portfolio.WASM.csproj -c Release -o build
+      run: dotnet publish Portfolio.WASM.csproj -c Release -o build
 
     - name: Commit and Push published output
       run: |

@@ -1,0 +1,62 @@
+﻿@page "/"
+
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<div class="home-container">
+    <div class="intro-section">
+        <div class="photo-container">
+            <img src="Pics/pfp.png.jpeg" alt="Mohamed Riadh Sahnoun" class="profile-photo" />
+            <div class="photo-border"></div>
+        </div>
+
+        <div class="intro-text">
+            <h1>
+                <span class="greeting">Hello, I'm</span>
+                <span class="name">Mohamed Riadh Sahnoun</span>
+            </h1>
+
+            <h2 class="title">.NET Engineer & Solution Architect</h2>
+
+            <p class="bio">
+                I craft robust, scalable applications using the latest .NET technologies.
+                With a passion for clean code and efficient solutions, I transform complex problems
+                into elegant implementations that drive business value.
+            </p>
+
+            <div class="cta-buttons">
+                <a @onclick="@(() => NavigationManager.NavigateTo("projects"))" class="cta-button primary">View My Work</a>
+                <a @onclick="@(() => NavigationManager.NavigateTo("contact"))" class="cta-button secondary">Get In Touch</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="tech-background">
+        @foreach (var tech in techIcons)
+        {
+            <div class="tech-icon" style="animation-delay: @(Random.Shared.Next(0, 10))s; left: @(Random.Shared.Next(5, 95))%; top: @(Random.Shared.Next(10, 90))%;">
+                <i class="@tech"></i>
+            </div>
+        }
+    </div>
+    <ExperiencePage />
+    <ProjectsPage />
+</div>
+
+@code {
+    private string[] techIcons = new[]
+    {
+        "fab fa-dotnet", "fas fa-database", "fab fa-microsoft",
+        "fas fa-cloud", "fas fa-code", "fas fa-server",
+        "fab fa-github", "fab fa-docker", "fas fa-layer-group",
+        "fas fa-cogs", "fas fa-microchip", "fab fa-aws"
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializeAnimations");
+        }
+    }
+}

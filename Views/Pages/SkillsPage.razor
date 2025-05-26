@@ -1,0 +1,328 @@
+﻿@page "/skills"
+
+@inject IJSRuntime JSRuntime
+
+<div class="skills-page">
+    <div class="page-intro">
+        <h1 class="page-title">Skill Tree</h1>
+        <p class="page-subtitle">Level up your project with my expertise</p>
+    </div>
+
+    <div class="skill-categories">
+        @foreach (var category in skillCategories)
+        {
+            <div class="skill-category @(selectedCategory == category.Id ? "active" : "")"
+                 @onclick="() => SelectCategory(category.Id)">
+                <i class="@category.Icon"></i>
+                <span>@category.Name</span>
+            </div>
+        }
+    </div>
+
+    <div class="skills-container">
+        @foreach (var category in skillCategories)
+        {
+            <div class="skills-group @(selectedCategory == category.Id ? "active" : "")">
+                <div class="skills-group-content">
+                    @foreach (var skill in category.Skills)
+                    {
+                        <div class="skill-card" id="@($"skill-{category.Id}-{skill.Id}")">
+                            <div class="skill-header">
+                                <div class="skill-icon">
+                                    <i class="@skill.Icon"></i>
+                                </div>
+                                <div class="skill-info">
+                                    <h3 class="skill-name">@skill.Name</h3>
+                                    <div class="skill-level">
+                                        <div class="level-indicator">
+                                            @for (int i = 0; i < 5; i++)
+                                            {
+                                                <div class="level-star @(i < skill.Level ? "filled" : "")"></div>
+                                            }
+                                        </div>
+                                        <span class="level-text">Level @skill.Level</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="skill-description">@skill.Description</div>
+                            @if (skill.Achievements.Any())
+                            {
+                                <div class="skill-achievements">
+                                    <h4>Achievements:</h4>
+                                    <ul>
+                                        @foreach (var achievement in skill.Achievements)
+                                        {
+                                            <li class="achievement @(achievement.Unlocked ? "unlocked" : "locked")">
+                                                <i class="@(achievement.Unlocked ? "fas fa-trophy" : "fas fa-lock")"></i>
+                                                <span>@achievement.Name</span>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            <div class="skill-progress">
+                                <div class="xp-bar">
+                                    <div class="xp-fill" style="width: @(skill.Experience)%"></div>
+                                </div>
+                                <span class="xp-text">@skill.Experience% XP</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private string selectedCategory = "backend";
+    private List<SkillCategory> skillCategories = new List<SkillCategory>();
+
+    protected override void OnInitialized()
+    {
+        // Initialize skill data
+        skillCategories = new List<SkillCategory>
+        {
+            new SkillCategory
+            {
+                Id = "backend",
+                Name = "Backend Development",
+                Icon = "fas fa-server",
+                Skills = new List<Skill>
+                {
+                    new Skill
+                    {
+                        Id = "csharp",
+                        Name = "C#",
+                        Icon = "fab fa-microsoft",
+                        Level = 5,
+                        Experience = 95,
+                        Description = "Expert-level proficiency in C# development with extensive experience in performance optimization and advanced language features.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "Performance Wizard", Unlocked = true },
+                            new Achievement { Name = "Design Pattern Master", Unlocked = true },
+                            new Achievement { Name = "Async Expert", Unlocked = true }
+                        }
+                    },
+                    new Skill
+                    {
+                        Id = "dotnet",
+                        Name = ".NET Core / Framework",
+                        Icon = "fas fa-cube",
+                        Level = 5,
+                        Experience = 90,
+                        Description = "In-depth knowledge of .NET ecosystem, including ASP.NET Core, Entity Framework, and various framework libraries.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "API Architect", Unlocked = true },
+                            new Achievement { Name = "Microservice Maestro", Unlocked = true },
+                            new Achievement { Name = "Full-Stack Fusion", Unlocked = false }
+                        }
+                    },
+                    new Skill
+                    {
+                        Id = "sql",
+                        Name = "SQL / Database Design",
+                        Icon = "fas fa-database",
+                        Level = 4,
+                        Experience = 85,
+                        Description = "Strong database design skills with expertise in performance tuning and complex query optimization.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "Query Optimizer", Unlocked = true },
+                            new Achievement { Name = "Schema Architect", Unlocked = true },
+                            new Achievement { Name = "Data Wizard", Unlocked = false }
+                        }
+                    }
+                }
+            },
+            new SkillCategory
+            {
+                Id = "frontend",
+                Name = "Frontend Development",
+                Icon = "fas fa-laptop-code",
+                Skills = new List<Skill>
+                {
+                    new Skill
+                    {
+                        Id = "blazor",
+                        Name = "Blazor",
+                        Icon = "fas fa-fire",
+                        Level = 4,
+                        Experience = 80,
+                        Description = "Extensive experience with Blazor WebAssembly and Server, component development, and SPA architecture.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "Component Craftsman", Unlocked = true },
+                            new Achievement { Name = "Web Assembly Warrior", Unlocked = true },
+                            new Achievement { Name = "Performance Perfectionist", Unlocked = false }
+                        }
+                    },
+                    new Skill
+                    {
+                        Id = "js",
+                        Name = "JavaScript / TypeScript",
+                        Icon = "fab fa-js",
+                        Level = 3,
+                        Experience = 70,
+                        Description = "Strong foundation in modern JavaScript practices and TypeScript development for enhanced type safety.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "TypeScript Tactician", Unlocked = true },
+                            new Achievement { Name = "DOM Manipulator", Unlocked = true },
+                            new Achievement { Name = "Framework Fluency", Unlocked = false }
+                        }
+                    },
+                    new Skill
+                    {
+                        Id = "css",
+                        Name = "CSS / SCSS",
+                        Icon = "fab fa-css3-alt",
+                        Level = 3,
+                        Experience = 75,
+                        Description = "Advanced styling capabilities with responsive design and modern CSS features including Grid and Flexbox.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "Responsive Ranger", Unlocked = true },
+                            new Achievement { Name = "Animation Artisan", Unlocked = true },
+                            new Achievement { Name = "Layout Legend", Unlocked = false }
+                        }
+                    }
+                }
+            },
+            new SkillCategory
+            {
+                Id = "ai",
+                Name = "AI & Prompt Engineering",
+                Icon = "fas fa-brain",
+                Skills = new List<Skill>
+                {
+                    new Skill
+                    {
+                        Id = "prompt",
+                        Name = "Prompt Engineering",
+                        Icon = "fas fa-terminal",
+                        Level = 4,
+                        Experience = 85,
+                        Description = "Specialized in crafting effective prompts for AI systems to generate desired outputs and behaviors.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "Prompt Virtuoso", Unlocked = true },
+                            new Achievement { Name = "Language Model Tamer", Unlocked = true },
+                            new Achievement { Name = "System Designer", Unlocked = false }
+                        }
+                    },
+                    new Skill
+                    {
+                        Id = "integration",
+                        Name = "AI Integration",
+                        Icon = "fas fa-plug",
+                        Level = 4,
+                        Experience = 80,
+                        Description = "Expert at integrating AI services into applications using REST APIs and SDKs.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "AI Architect", Unlocked = true },
+                            new Achievement { Name = "API Maestro", Unlocked = true },
+                            new Achievement { Name = "Solution Specialist", Unlocked = false }
+                        }
+                    }
+                }
+            },
+            new SkillCategory
+            {
+                Id = "devops",
+                Name = "DevOps & Tools",
+                Icon = "fas fa-tools",
+                Skills = new List<Skill>
+                {
+                    new Skill
+                    {
+                        Id = "git",
+                        Name = "Git / Source Control",
+                        Icon = "fab fa-git-alt",
+                        Level = 4,
+                        Experience = 85,
+                        Description = "Advanced knowledge of Git workflows, branching strategies, and repository management.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "Branch Manager", Unlocked = true },
+                            new Achievement { Name = "Collaboration Champion", Unlocked = true },
+                            new Achievement { Name = "Merge Master", Unlocked = false }
+                        }
+                    },
+                    new Skill
+                    {
+                        Id = "docker",
+                        Name = "Docker / Containerization",
+                        Icon = "fab fa-docker",
+                        Level = 3,
+                        Experience = 70,
+                        Description = "Experience with containerizing applications and deploying with Docker for consistent environments.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "Container Captain", Unlocked = true },
+                            new Achievement { Name = "Environment Engineer", Unlocked = false },
+                            new Achievement { Name = "Deployment Dynamo", Unlocked = false }
+                        }
+                    },
+                    new Skill
+                    {
+                        Id = "cicd",
+                        Name = "CI/CD Pipelines",
+                        Icon = "fas fa-infinity",
+                        Level = 3,
+                        Experience = 65,
+                        Description = "Implementation of continuous integration and deployment workflows using Azure DevOps and GitHub Actions.",
+                        Achievements = new List<Achievement>
+                        {
+                            new Achievement { Name = "Pipeline Pioneer", Unlocked = true },
+                            new Achievement { Name = "Automation Ace", Unlocked = false },
+                            new Achievement { Name = "Deployment Deity", Unlocked = false }
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initSkillsAnimations");
+        }
+    }
+
+    private void SelectCategory(string categoryId)
+    {
+        selectedCategory = categoryId;
+        StateHasChanged();
+    }
+
+    public class SkillCategory
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Icon { get; set; }
+        public List<Skill> Skills { get; set; } = new List<Skill>();
+    }
+
+    public class Skill
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Icon { get; set; }
+        public int Level { get; set; }
+        public int Experience { get; set; }
+        public string Description { get; set; }
+        public List<Achievement> Achievements { get; set; } = new List<Achievement>();
+    }
+
+    public class Achievement
+    {
+        public string Name { get; set; }
+        public bool Unlocked { get; set; }
+    }
+}

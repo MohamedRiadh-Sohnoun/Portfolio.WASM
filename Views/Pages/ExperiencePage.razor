@@ -1,0 +1,131 @@
+﻿@page "/experience"
+@inject IJSRuntime JSRuntime
+
+<div class="experience-page">
+    <div class="page-intro @AnimationClass">
+        <h1 class="page-title">Work Experience</h1>
+        <p class="page-subtitle">My professional journey in software development</p>
+    </div>
+
+    <div class="timeline-container">
+        @foreach (var experience in experiences)
+        {
+            <div class="timeline-item @experience.AnimationClass" id="@experience.Id">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-header">
+                        <div class="company-info">
+                            <div class="company-logo">
+                                <img src="@experience.LogoUrl" alt="@experience.Company logo" />
+                            </div>
+                            <div class="company-details">
+                                <h3 class="job-title">@experience.Title</h3>
+                                <h4 class="company-name">@experience.Company</h4>
+                                <div class="job-duration">@experience.Period</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="job-description">
+                        <ul>
+                            @foreach (var responsibility in experience.Responsibilities)
+                            {
+                                <li>@responsibility</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="job-tech">
+                        @foreach (var tech in experience.Technologies)
+                        {
+                            <span class="tech-badge">@tech</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private string AnimationClass = "";
+    private List<ExperienceModel> experiences = new List<ExperienceModel>();
+
+    protected override void OnInitialized()
+    {
+        experiences = new List<ExperienceModel>
+        {
+            new ExperienceModel
+            {
+                Id = "exp-1",
+                Title = ".NET Software Engineer, Prompt Engineer",
+                Company = "Dev-NewTech",
+                Period = "July 2023 - Present",
+                LogoUrl = "Pics/Companies/dev-newtech-logo.png",
+                Responsibilities = new List<string>
+                {
+                    "Developed and maintained web applications using .NET Framework, C#, Blazor, and ASP.NET Core.",
+                    "Improved overall system efficiency by optimizing SQL queries resulting in 34% faster response times.",
+                    "Implemented various Design Patterns (N-Layers, MVC, and The Standard Architecture).",
+                    "Designed and Integrated AI Services and Custom Playgrounds to Efficiently Automate AI Internal Prompts."
+                },
+                Technologies = new List<string> { ".NET", "C#", "Blazor", "ASP.NET Core", "SQL", "AI", "Prompt Engineering" },
+                AnimationClass = ""
+            },
+            new ExperienceModel
+            {
+                Id = "exp-2",
+                Title = ".Net Developer Intern",
+                Company = "Cydista",
+                Period = "February 2023 - June 2023",
+                LogoUrl = "Pics/Companies/cydista-logo.png",
+                Responsibilities = new List<string>
+                {
+                    "Designed and Implemented a command-Line Application for generating ASP.Net Core Api applications' source code.",
+                    "Improved the overall Applications' development speed by approximately 40%, while mitigating human error."
+                },
+                Technologies = new List<string> { ".NET", "C#", "ASP.NET Core", "CLI" },
+                AnimationClass = ""
+            },
+            new ExperienceModel
+            {
+                Id = "exp-3",
+                Title = "Full Stack Developer Intern",
+                Company = "NeoConept-Monastir",
+                Period = "June 2021 - August 2021",
+                LogoUrl = "Pics/Companies/neoconcept-logo.png",
+                Responsibilities = new List<string>
+                {
+                    "Designed and Implemented a client-side application of an existing web platform using JS Frameworks.",
+                    "Migrated the Existing Meteor JS Application to a new version while improving code quality and Api Interactions.",
+                    "Increased application performance through code optimization and better API integration."
+                },
+                Technologies = new List<string> { "JavaScript", "Meteor.js", "HTML/CSS", "API Integration" },
+                AnimationClass = ""
+            }
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Add initial animation class
+            AnimationClass = "fade-in";
+            StateHasChanged();
+
+            // Initialize the intersection observer for timeline items
+            await JSRuntime.InvokeVoidAsync("initExperienceAnimations");
+        }
+    }
+
+    public class ExperienceModel
+    {
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Company { get; set; }
+        public string Period { get; set; }
+        public string LogoUrl { get; set; }
+        public List<string> Responsibilities { get; set; }
+        public List<string> Technologies { get; set; }
+        public string AnimationClass { get; set; }
+    }
+}

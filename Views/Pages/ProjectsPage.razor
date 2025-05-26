@@ -1,0 +1,125 @@
+﻿@page "/projects"
+@inject IJSRuntime JSRuntime
+
+<div class="page-transition">
+    <div class="projects-container">
+        <div class="projects-header">
+            <h1 class="projects-title">My Projects</h1>
+            <p class="projects-subtitle">Explore some of my recent work and open-source contributions</p>
+        </div>
+
+        <div class="projects-grid">
+            @foreach (var project in projects)
+            {
+                <div class="project-card" @key="project.Id">
+                    <div class="project-logo-container">
+                        <img src="@project.LogoUrl" alt="@project.Name Logo" class="project-logo" />
+                    </div>
+                    <div class="project-content">
+                        <h2 class="project-name">@project.Name</h2>
+                        <span class="project-type">@project.Type</span>
+                        <p class="project-description">@project.Description</p>
+                        <div class="project-tech">
+                            @foreach (var tech in project.Technologies)
+                            {
+                                <span class="tech-badge">@tech</span>
+                            }
+                        </div>
+                        <div class="project-links">
+                            @if (!string.IsNullOrEmpty(project.WebsiteUrl))
+                            {
+                                <a href="@project.WebsiteUrl" target="_blank" class="project-link website-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                    </svg>
+                                    Visit Website
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(project.GithubUrl))
+                            {
+                                <a href="@project.GithubUrl" target="_blank" class="project-link github-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                    </svg>
+                                    View on GitHub
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Project> projects = new List<Project>
+    {
+        new Project
+        {
+            Id = 1,
+            Name = "Penlyzard",
+            Type = "Web Platform",
+            Description = "Collaborate and transform raw ideas into complete Functional Documents, with AI-powered assistant, conflicts management, semantic search, full UML generation and editing, and much more!",
+            LogoUrl = "Pics/Projects/penlyzard-logo.png",
+            WebsiteUrl = "http://penlyzard.azurewebsites.net/",
+            GithubUrl = "",
+            Technologies = new List<string> { "ASP.NET Core", "Blazor", "MySQL", "Azure", "Keycloak" }
+        },
+        new Project
+        {
+            Id = 2,
+            Name = "BlazorDynamicForms",
+            Type = "Blazor Library",
+            Description = "An open-source Blazor library that allows developers to create dynamic forms with validation, conditional logic, and custom rendering. Simplifies form management in Blazor applications.",
+            LogoUrl = "Pics/Projects/blazordynamicforms-logo.png",
+            WebsiteUrl = "",
+            GithubUrl = "https://github.com/mrsoh/BlazorDynamicForms",
+            Technologies = new List<string> { "Blazor", ".NET", "C#", "JavaScript" }
+        },
+        new Project
+        {
+            Id = 3,
+            Name = "DeepQuiz.AI",
+            Type = "Web Application",
+            Description = "Learn German with an endless flow of guizzes, fully configurable by level, with deep explanation and performance tracking.",
+            LogoUrl = "Pics/Projects/deepquiz-logo.png",
+            WebsiteUrl = "",
+            GithubUrl = "https://github.com/mrsoh/DeepQuizAI",
+            Technologies = new List<string> { "ASP.NET Core", "ML.NET", "Blazor", "Entity Framework" }
+        },
+        new Project
+        {
+            Id = 4,
+            Name = "Maison d'Apple",
+            Type = "Online iPhone Store",
+            Description = "A full-featured e-commerce platform specialized in Apple products, featuring detailed product pages, secure payment processing, and an intuitive admin dashboard for inventory management.",
+            LogoUrl = "Pics/Projects/maison-apple-logo.png",
+            WebsiteUrl = "",
+            GithubUrl = "https://github.com/mrsoh/MaisonDApple",
+            Technologies = new List<string> { "ASP.NET Core", "Entity Framework", "SQL Server", "Bootstrap" }
+        }
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializeProjectAnimations");
+        }
+    }
+
+    public class Project
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Description { get; set; }
+        public string LogoUrl { get; set; }
+        public string WebsiteUrl { get; set; }
+        public string GithubUrl { get; set; }
+        public List<string> Technologies { get; set; }
+    }
+}
